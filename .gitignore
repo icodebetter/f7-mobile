@@ -1,0 +1,7 @@
+﻿# .gitignore
+node_modules
+plugins/android.json
+plugins/windows.json
+plugins/wp8.json
+plugins/remote_ios.json
+/platforms/

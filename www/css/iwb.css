@@ -1,0 +1,26 @@
+.iwb-menu{
+	padding:3px;
+}
+
+.iwb-mmenu-icon {
+	font-size: 16px;
+	width: 16px;
+}
+
+a.item-link.panel-close .item-inner::before{
+	content:none !important;
+}
+
+.card-content{
+	overflow:hidden;
+}
+
+.title span.sub-title {
+	 display: block;
+	 font-size: .8rem;
+	 opacity: .7;
+}
+
+.title {
+	text-align:center !important;
+}
