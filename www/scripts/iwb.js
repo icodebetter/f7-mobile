@@ -720,7 +720,7 @@ iWorkbetter offers many solutions as diverse as pre-sale solutions, invoicing et
 
 
 
-iwb.serverUrl = ''http://192.168.2.122:8080/iwb/app/';  //'http://192.168.2.122:8080/iwb/app/'; 'http://icb.world/app/'
+iwb.serverUrl = 'http://icb.world/app/';  //'http://192.168.2.122:8080/iwb/app/'; 
 iwb.debug = true;
 
 iwb.submit = function (idForm, baseParams, callback) {
