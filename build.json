@@ -1,7 +1,7 @@
 {
      "android": {
       "release": {
-        "keystore": "C:\\phonegap apps\\iwb.keystore",
+        "keystore": "C:\\Users\\Ulugbek\\Documents\\iWorkBetter\\iwb.keystore",
         "storePassword": "iwbandroid",
         "alias": "iwb",
         "password": "iwbandroid",

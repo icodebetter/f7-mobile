@@ -1,5 +1,11 @@
-﻿var routes = [
-    //	  {path: '/',content: ' iCodeBetter ',},
+﻿var _scd = null;
+if (!window.iwb) window.iwb = {};
+
+iwb.iwb = !0;
+
+
+var routes = [
+    // {path: '/',content: ' iWorkBetter ',},
     {
         path: '/home', async: function (routeTo, routeFrom, resolve, reject) {
             resolve({
@@ -14,7 +20,7 @@
 		  	              <i class="icon material-icons if-md">menu</i>
 		  	            </a>
 		  	          </div>
-		  	          <div class="title">iCodeBetter</div>
+		  	          <div class="title">iWorkBetter</div>
 		  	        </div>
 		  	      </div>
 		  	      <!-- Toolbar-->
@@ -22,16 +28,16 @@
 		  	      <!-- Scrollable page content-->
 		  	      <div id="idx-page-content-home" class="page-content ptr-content">
 		  	    	<div class="ptr-preloader"><div class="preloader"></div><div class="ptr-arrow"></div></div>
-		  	  {{#each data}}
-		  	                  <div key="{{dashId}}" class="card">
-		  	                  	<div class="card-header">
-		  	                  		{{name}} {{#if listId}}<a href="/showMList?_lid={{listId}}"><i class="icon f7-icons">arrow_right</i></a>{{/if}}
-		  	                  	</div>
-		  	                  	<div class="card-content">
-		  	    					<div id="id-chart-{{dashId}}"></div>
-		  	    				</div>
-		  	                  </div>
-		  	  {{/each}}
+				  	  {{#each data}}
+		                  <div key="{{dashId}}" class="card">
+		                  	<div class="card-header">
+		                  		{{name}} {{#if listId}}<a href="/showMList?_lid={{listId}}"><i class="icon f7-icons">arrow_right</i></a>{{/if}}
+		                  	</div>
+		                  	<div class="card-content">
+		    					<div id="id-chart-{{dashId}}"></div>
+		    				</div>
+		                  </div>
+				  	  {{/each}}
 		  	      </div>
 		  	    </div>`
                     , methods: {
@@ -49,7 +55,7 @@
                         pageInit: function () {
                             var self = this;
                             iwb.request({
-                                url: 'ajaxQueryData?_qid=6648', data: { xmobile_flag: 1, sort: 'mobile_tab_order' }, success: function (j) {
+                                url: 'ajaxQueryData?_qid=6648', data: { _renderer: 'ext3_4', xmobile_flag: 1, sort: 'mobile_tab_order' }, success: function (j) {
                                     if (j.data.length) {
                                         self.$setState(j);
                                         setTimeout(function () {
@@ -76,98 +82,416 @@
             resolve({
                 component: {
                     template: `<div class="page">
- {{#if backButton}}<div class="navbar">
- <div class="navbar-inner">
-    <div class="left">
-      <a href="#" class="link back">
-        <i class="icon icon-back"></i>
-        <span class="if-not-md">Back</span>
-      </a>
-    </div>
-  </div>
-</div>{{/if}}
-<div class="page-content">
-  <div class="block">
-    <p>Welcome to iCodebetter Mobile Platform. Here you can test your mobile projects</p>
-  </div>
-  <div class="icb-expandable-cards">
-    <div class="card card-expandable">
-      <div class="card-content">
-        <div class="bg-color-red" style="height: 200px">
-          <div class="card-header text-color-white display-block">
-            Add Project
-            <br>
-            <small style="opacity: 0.7">By scanning square code</small>
-          </div>
-          <a href="#" class="link card-close card-opened-fade-in color-white" style="position: absolute; right: 15px; top: 15px">
-            <i class="icon f7-icons">close_round_fill</i>
-          </a>
-        </div>
-        <div class="card-content-padding">
-          <p>Framework7 - is a free and open source HTML mobile framework to develop hybrid mobile apps or web apps with iOS or Android (Material) native look and feel. It is also an indispensable prototyping apps tool to show working app prototype as soon as possible in case you need to. Framework7 is created by Vladimir Kharlampidi (iDangero.us).</p>
-          <p>The main approach of the Framework7 is to give you an opportunity to create iOS and Android (Material) apps with HTML, CSS and JavaScript easily and clear. Framework7 is full of freedom. It doesn't limit your imagination or offer ways of any solutions somehow. Framework7 gives you freedom!</p>
-          <p>Framework7 is not compatible with all platforms. It is focused only on iOS and Android (Material) to bring the best experience and simplicity.</p>
-          <p>Framework7 is definitely for you if you decide to build iOS and Android hybrid app (Cordova or PhoneGap) or web app that looks like and feels as great native iOS or Android (Material) apps.</p>
-          <p>
-            <a href="#" class="button button-fill button-round button-large card-close color-red">Close</a>
-          </p>
-        </div>
-      </div>
-    </div>
+	 {{#if backButton}}<div class="navbar">
+	 <div class="navbar-inner">
+	    <div class="left">
+	      <a href="#" class="link back">
+	        <i class="icon icon-back"></i>
+	        <span class="if-not-md">Back</span>
+	      </a>
+	    </div>
+	  </div>
+	</div>{{/if}}
+	<div class="page-content">
+	  <div class="block" style="text-align:center;">
+	    <p>iWorkBetter Workspace.</p>
+	  </div>
+	  <div class="icb-expandable-cards">
+	    <div class="card card-expandable" id="idx-card-new-project">
+	      <div class="card-content">
+	        <div class="bg-color-red">
+	          <div class="card-header text-color-white display-block" style="font-weight:500;">
+	            Add Customization
+	            <br>
+	            <small style="opacity: 0.8;font-size:1rem;font-weight:400;">Manually or by scanning QR code</small>
+	          </div>
+	          <a href="#" class="link card-close card-opened-fade-in color-white" style="position: absolute; right: 15px; top: 15px">
+	            <i class="icon f7-icons">close_round_fill</i>
+	          </a>
+	  		  <div class="block" style="padding-top:10px; padding-bottom:12px">
+	 	        <p class="row">
+		        <a href=# @click="clickSquareCode" class="col button button-fill color-white button-large" style="color:var(--f7-theme-color-bg-color) !important">Scan Square Code</a></p>
+			  
+			  </div>
+	        </div>
+	        <div class="card-content-padding">
+				<form class="list" id="idx-form-new-project">
+				    <ul>
+				        <li>
+				            <div class="item-content item-input item-input-outline">
+				                <div class="item-inner">
+				                    <div class="item-title item-floating-label">Name</div>
+				                    <div class="item-input-wrap">
+				                        <input type="text" name="name" value="Default" placeholder="">
+				                    </div>
+				                </div>
+				            </div>
+				        </li>
+				        <li>
+				            <div class="item-content item-input item-input-outline">
+				                <div class="item-inner">
+				                    <div class="item-title item-floating-label">URL</div>
+				                    <div class="item-input-wrap">
+				                        <input type="text" name="url" value="http://" placeholder="">
+				                    </div>
+				                </div>
+				            </div>
+				        </li>
+				        {{#if ../iwb}}<li>
+				            <div class="item-content item-input item-input-outline">
+				                <div class="item-inner">
+				                    <div class="item-title item-floating-label">Customization</div>
+				                    <div class="item-input-wrap">
+				                        <input type="text" name="cusId" value="" placeholder="">
+				                    </div>
+				                </div>
+				            </div>
+				        </li>{{/if}}
+				        <li>
+				            <div class="item-content item-input item-input-outline">
+				                <div class="item-inner">
+				                    <div class="item-title item-floating-label">Username</div>
+				                    <div class="item-input-wrap">
+				                        <input type="text" name="user_name" value="" placeholder="">
+				                    </div>
+				                </div>
+				            </div>
+				        </li>
+				        <li>
+				            <div class="item-content item-input item-input-outline">
+				                <div class="item-inner">
+				                    <div class="item-title item-floating-label">Password</div>
+				                    <div class="item-input-wrap">
+				                        <input type="password" name="pass_word" value="" placeholder="">
+				                    </div>
+				                </div>
+				            </div>
+				        </li>
+				        {{#if ../iwb}}<li>
+				            <div class="item-content item-input item-input-outline">
+				                <div class="item-inner">
+				                    <div class="item-title item-floating-label">Language</div>
+				                    <div class="item-input-wrap">
+				                        <select name="locale">
+							                  <option value="tr" selected>Turkce</option>
+							                  <option value="en">English</option>
+							               </select>
+				                    </div>
+				                </div>
+				            </div>
+				        </li>{{/if}}
+	                    <li>
+				            <div class="item-content item-input item-input-outline">
+				                <div class="item-inner">
+				                    <div class="item-title item-floating-label">Theme</div>
+				                    <div class="item-input-wrap">
+				                        <select name="theme">
+							                  <option value="" {{#js_if "this.theme==''"}}selected{{/js_if}}>Default</option>
+							                  <option value="theme-dark" {{#js_if "this.theme=='theme-dark'"}}selected{{/js_if}}>Dark</option>
+							               </select>
+				                    </div>
+				                </div>
+				            </div>
+				        </li>
+				    </ul>
+				    <div class="block">
+				        <p class="row">
+				        <a href=# @click="clickTest(-1)" class="col button button-big button-fill button-raised color-green">Test</a>
+				        <a href=# @click="clickNew" class="col button button-big button-fill button-raised color-blue">Save</a></p>
+				    </div>
+				</form>        
+			</div>
+	      </div>
+	    </div>
 
-    <div class="card card-expandable">
-      <div class="card-content">
-        <div class="bg-color-blue" style="height: 200px">
-          <div class="card-header text-color-white display-block">
-            Add Project
-            <br>
-            <small style="opacity: 0.7">Manually</small>
-          </div>
-          <a href="#" class="link card-close card-opened-fade-in color-black" style="position: absolute; right: 15px; top: 15px">
-            <i class="icon f7-icons">close_round_fill</i>
-          </a>
-        </div>
-        <div class="card-content-padding">
-          <p>Framework7 - is a free and open source HTML mobile framework to develop hybrid mobile apps or web apps with iOS or Android (Material) native look and feel. It is also an indispensable prototyping apps tool to show working app prototype as soon as possible in case you need to. Framework7 is created by Vladimir Kharlampidi (iDangero.us).</p>
-          <p>The main approach of the Framework7 is to give you an opportunity to create iOS and Android (Material) apps with HTML, CSS and JavaScript easily and clear. Framework7 is full of freedom. It doesn't limit your imagination or offer ways of any solutions somehow. Framework7 gives you freedom!</p>
-          <p>Framework7 is not compatible with all platforms. It is focused only on iOS and Android (Material) to bring the best experience and simplicity.</p>
-          <p>Framework7 is definitely for you if you decide to build iOS and Android hybrid app (Cordova or PhoneGap) or web app that looks like and feels as great native iOS or Android (Material) apps.</p>
-          <p>
-            <a href="#" class="button button-fill button-round button-large card-close color-yellow text-color-black">Close</a>
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-</div>
-`, style: `
+	    <br/>
+
+	{{#each projects}}
+		<div class="card card-expandable" id="idx-card-project-{{id}}">
+	      <div class="card-content">
+	        <div class="bg-color-blue">
+	          <div class="card-header text-color-white display-block" style="font-weight:500;">
+	            {{name}}
+	            <br>
+	            <small style="opacity: 0.7;font-size:1rem;font-weight:400;">{{url}}</small><br/>
+	          </div>
+	          <a href="#" class="link card-close card-opened-fade-in color-white" style="position: absolute; right: 15px; top: 15px">
+	            <i class="icon f7-icons">close_round_fill</i>
+	          </a>
+	  		  <div class="block" style="padding-top:10px; padding-bottom:12px">
+		        <p class="row">
+		        <a href=# @click="clickConnect({{id}})" class="col button button-fill color-white button-large" style="color:var(--f7-theme-color-bg-color) !important">Connect</a></p>
+			  </div>
+	        </div>
+	        <div class="card-content-padding">
+				<form class="list" id="idx-form-project-{{id}}" data-pk="{{id}}">
+				    <ul>
+				        <li>
+				            <div class="item-content item-input item-input-outline">
+				                <div class="item-inner">
+				                    <div class="item-title item-floating-label">Name</div>
+				                    <div class="item-input-wrap">
+				                        <input type="text" name="name" value="{{name}}" placeholder="">
+				                    </div>
+				                </div>
+				            </div>
+				        </li>
+				        <li>
+				            <div class="item-content item-input item-input-outline">
+				                <div class="item-inner">
+				                    <div class="item-title item-floating-label">URL</div>
+				                    <div class="item-input-wrap">
+				                        <input type="text" name="url" value="{{url}}" placeholder="">
+				                    </div>
+				                </div>
+				            </div>
+				        </li>
+				        {{#if ../iwb}}<li>
+				            <div class="item-content item-input item-input-outline">
+				                <div class="item-inner">
+				                    <div class="item-title item-floating-label">Customization</div>
+				                    <div class="item-input-wrap">
+				                        <input type="text" name="cusId" value="{{cusId}}" placeholder="">
+				                    </div>
+				                </div>
+				            </div>
+				        </li>{{/if}}
+	                    <li>
+				            <div class="item-content item-input item-input-outline">
+				                <div class="item-inner">
+				                    <div class="item-title item-floating-label">Username</div>
+				                    <div class="item-input-wrap">
+				                        <input type="text" name="user_name" autocomplete="off" value="{{user_name}}" placeholder="">
+				                    </div>
+				                </div>
+				            </div>
+				        </li>
+				        <li>
+				            <div class="item-content item-input item-input-outline">
+				                <div class="item-inner">
+				                    <div class="item-title item-floating-label">Password</div>
+				                    <div class="item-input-wrap">
+				                        <input type="password" name="pass_word" autocomplete="off" value="{{pass_word}}" placeholder="">
+				                    </div>
+				                </div>
+				            </div>
+				        </li>
+				        {{#if ../iwb}}<li>
+				            <div class="item-content item-input item-input-outline">
+				                <div class="item-inner">
+				                    <div class="item-title item-floating-label">Language</div>
+				                    <div class="item-input-wrap">
+				                        <select name="locale">
+							                  <option value="tr" selected>Turkce</option>
+							                  <option value="en">English</option>
+							               </select>
+				                    </div>
+				                </div>
+				            </div>
+				        </li>{{/if}}
+	                    <li>
+				            <div class="item-content item-input item-input-outline">
+				                <div class="item-inner">
+				                    <div class="item-title item-floating-label">Theme</div>
+				                    <div class="item-input-wrap">
+				                        <select name="theme">
+							                  <option value="" {{#js_if "this.theme==''"}}selected{{/js_if}}>Default</option>
+							                  <option value="theme-dark" {{#js_if "this.theme=='theme-dark'"}}selected{{/js_if}}>Dark</option>
+							               </select>
+				                    </div>
+				                </div>
+				            </div>
+				        </li>
+				    </ul>
+				    <div class="block">
+			  			<br/> 
+
+				        <p class="row"><a href=# @click="clickDelete({{id}})" class="col button button-big button-fill button-raised color-red">Delete</a>
+				        <a href=# @click="clickTest({{id}})" class="col button button-big button-fill button-raised color-green">Test</a>
+				        </p>
+			  			<p class="row">
+			  			<a href=# @click="clickSave({{id}})" class="col button button-big button-fill button-raised color-blue">Save</a>
+				        </p>
+
+				    </div>
+				</form>        
+			</div>
+	      </div>
+	    </div>
+	{{/each}}
+	    
+	  </div>
+	</div>
+	</div>
+	`, style: `
 .card-expandable {
-  height: 110px;
+  height: 90px;
+  box-shadow: 0 1px 10px #777;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
-.icb-expandable-cards .card-header img{
-	width:80px;position:absolute; border-radius:5px; right:40px; top:20px; opacity:.9;
-}
-.icb-expandable-cards .card-opened .card-header img{
-display:none;
-	width: 80%;
-  overflow: hidden;
-  position: relative;
-  left: 10%;
-}
+
 `,
                     data: function () {
                         return {
-                            backButton: Object.assign(routeTo.query, routeTo.params).back || false
+                            backButton: Object.assign(routeTo.query, routeTo.params).back || false,
+                            projects: [],
+                            iwb: iwb.iwb || false
                         }
                     },
+
                     on: {
                         pageInit: function () {
-
+                            var ls = window.localStorage;
+                            if (ls) {
+                                var projects = ls.getItem('iwb-projects');
+                                if (!projects) projects = "[]";
+                                var p = JSON.parse(projects);
+                                this.$setState({ projects: p })
+                            }
                         }
-                    }, methods: {
-                        clickAddProject: function () {
-                            alert('TODO');
+                    },
+
+                    methods: {
+                        clickSquareCode: function () {
+                            cordova.plugins.barcodeScanner.scan(
+                                function (result) {
+                                    //                                    alert("We got a barcode\n" +"Result: " + result.text + "\n");
+                                    $$('#idx-form-new-project input[name="url"]').val(result.text);
+                                    Framework7.request({
+                                        url: result.text + 'ajaxPing?.r=' + Math.random(),
+                                        data: {}, dataType: 'json',
+                                        success: function (j) {
+                                            if (!j.version || j.version != 'v2') {
+                                                alert("Wrong Version. Needs V2 on Server");
+                                                iwb.app.views.main.router.navigate("/workspace");
+                                                return;
+                                            }
+                                            if (j && j.name) $$('#idx-form-new-project input[name="name"]').val(j.name);
+                                        }, error: function (j) {
+                                            iwb.app.toast.show({
+                                                text: 'Connection Error', closeButton: !0
+                                            });
+                                        }
+                                    });
+                                },
+                                function (error) {
+                                    alert("Scanning failed: " + error);
+                                });
+                            //alert('TODO');
+                        }, clickConnect: function (id) {
+                            var self = this;
+                            var f = iwb.app.form.convertToData('#idx-form-project-' + id);
+                            Framework7.request({
+                                url: f.url + 'ajaxPing?d=1&c=1&.r=' + Math.random(),
+                                method: 'POST', data: {},
+                                dataType: 'json',
+                                success: function (d) {
+                                    if (!d.version || d.version != 'v2') {
+                                        alert("Wrong Version. Needs V2 on Server");
+                                        iwb.app.views.main.router.navigate("/workspace");
+                                        return;
+                                    }
+                                    _scd = d && d.session ? d.session : null;
+                                    iwb.serverUrl = f.url;
+                                    var ls = window.localStorage;
+                                    ls.setItem('userName', f.user_name || '');
+                                    ls.setItem('passWord', f.pass_word || '');
+                                    if (iwb.iwb) ls.setItem('cusId', f.cusId || '0');
+                                    iwb.app.card.close('#idx-card-project-' + id);
+                                    document.body.className = f.theme || '';
+                                    if (_scd) {
+                                        iwb.home = false;
+                                        iwb.prepareMainMenu();
+                                    } else
+                                        iwb.reLogin();
+
+                                }, error: function (d) {
+                                    iwb.app.toast.show({
+                                        text: 'Error Connecting. Check URL or Device Connection<br/>' + d, closeTimeout: 3000
+                                    });
+                                }
+                            });
+                        }, clickDelete: function (id) {
+                            var self = this;
+                            var ls = window.localStorage;
+                            var p = this.projects;
+                            for (var qi = 0; qi < p.length; qi++)if (id == 1 * p[qi].id) {
+                                iwb.app.dialog.confirm("Are you sure?", "Delete", function () {
+                                    p.splice(qi, 1);
+                                    //console.log('aha', qi, p);
+                                    ls.setItem('iwb-projects', JSON.stringify(p));
+                                    iwb.app.card.close('#idx-card-project-' + id);
+                                    setTimeout(function () { self.$setState({ projects: p }); }, 200);
+                                });
+                                break;
+                            }
+                        }, clickTest: function (id) {
+                            var f = iwb.app.form.convertToData(id == -1 ? '#idx-form-new-project' : ('#idx-form-project-' + id));
+                            if (!f.url) {
+                                iwb.app.dialog.alert('Error: Url is mandatory');
+                                return;
+                            }
+
+                            Framework7.request({
+                                url: f.url + 'ajaxPing?d=1&c=1&.r=' + Math.random(),
+                                method: 'POST', data: {},
+                                dataType: 'json',
+                                success: function (k) {
+                                    //k = JSON.parse(k);                        
+                                    if (!k.version || k.version != 'v2') {
+                                        alert("Wrong Version. Needs V2 on Server");
+                                        iwb.app.views.main.router.navigate("/workspace");
+                                        return;
+                                    }
+                                    iwb.app.toast.show({
+                                        text: 'Connection Done', closeTimeout: 2000
+                                    });
+                                }, error: function (d) {
+                                    iwb.app.toast.show({
+                                        text: 'Error Connecting. Check URL or Device Connection<br/>' + d, closeTimeout: 3000
+                                    });
+                                }
+                            });
+
+                        }, clickSave: function (id) {
+                            var ls = window.localStorage;
+                            if (ls) {
+                                var f = iwb.app.form.convertToData('#idx-form-project-' + id);
+                                if (!f.name || !f.url) {
+                                    iwb.app.dialog.alert('Error: Name & Url is mandatory');
+                                    return;
+                                }
+                                var p = this.projects;
+                                for (var qi = 0; qi < p.length; qi++)if (id == 1 * p[qi].id) {
+                                    id = 1 * p[qi].id;
+                                    f.id = id;
+                                    p[qi] = f;
+                                    ls.setItem('iwb-projects', JSON.stringify(p));
+                                    this.$setState({ projects: p });
+                                    iwb.app.card.close('#idx-card-project-' + id);
+                                }
+
+                            }
+                        }, clickNew: function () {
+                            var ls = window.localStorage;
+                            if (ls) {
+                                var f = iwb.app.form.convertToData('#idx-form-new-project');
+                                if (!f.name || !f.url) {
+                                    iwb.app.dialog.alert('Error: Name & Url is mandatory');
+                                    return;
+                                }
+                                var p = this.projects;
+                                var id = 0;
+                                for (var qi = 0; qi < p.length; qi++)if (id < 1 * p[qi].id) id = 1 * p[qi].id;
+                                f.id = id + 1;
+                                p.push(f);
+                                ls.setItem('iwb-projects', JSON.stringify(p));
+                                this.$setState({ projects: p });
+                                iwb.app.card.close('#idx-card-new-project');
+
+                            } else
+                                iwb.app.dialog.alert('Error: No local Storage');
                         }
                     }
                 }
@@ -191,7 +515,17 @@ display:none;
 </div>
 <div class="page-content">
   <div class="block">
-    <p>About iCodebetter</p>
+    <p>About iWorkBetter Mobile</p>
+  </div>
+<div class="block">
+<p> This is mobile application of iWorkBetter - user friendly web-based "business management platform" designed for all management and ERP needs of all kinds of enterprises and institutions.
+This platform enables the business, communication and cooperation operations between customers, suppliers and employees to be performed and managed within a single structure.</p>
+<p>iWorkBetter business management platform is a sustainable web-based system that is compatible with the activities of institutions and companies.
+It contains the required ERP software applications as a whole.</p>
+<p>The platform consists of numerous inter-integrated modules such as CRM, project management, office management, time management, production management,
+accounting and financial management that complies with the logic of quality management system. In laboratory management processes,
+iWorkbetter offers many solutions as diverse as pre-sale solutions, invoicing etc.</p>
+    <p>iWorkBetter Mobile is developed by Veli Ozturk, Caglar Akkaya, Omer Faruk Aydin, Fatih Cetin, Alican Sahin, Azat Temirbek Uulu, and Ulugbek Irmatov.</p>
   </div>
 </div>
 </div>
@@ -228,11 +562,6 @@ display:none;
 			        <i class="icon material-icons md-only">list</i>
 			        <span class="tabbar-label">Workspace</span>
 			      </a>
-                  <a class="tab-link panel-close" href="#" @click="scanBarcode">
-			      	<i class="icon f7-icons if-not-md">list</i>
-			        <i class="icon material-icons md-only">list</i>
-			        <span class="tabbar-label">Test</span>
-			      </a>
 			    </div>
 			  </div>  
 			  <div class="page-content login-screen-content" id="icb-login-screen">
@@ -264,7 +593,7 @@ display:none;
 	                  <a href="#" @click="clickLogin" class="item-link list-button login-button">Sign In</a>
 	                </li>
 	              </ul>
-	              <div class="block-footer">iCodeBetter (c) 2019</div>
+	              <div class="block-footer">iWorkBetter (c) 2019</div>
 	            </div>
 	          </div></div>`,
                     on: {
@@ -283,14 +612,14 @@ display:none;
                             var password = $$('#icb-login-screen [name="password"]').val();
                             if (username && password) {
                                 iwb.app.preloader.show();
+                                var ls = window.localStorage;
                                 Framework7.request({
-                                    url: iwb.serverUrl + 'ajaxAuthenticateUser?d=1&c=1&_mobile=0&customizationId=0&locale=tr',
+                                    url: iwb.serverUrl + 'ajaxAuthenticateUser?d=1&c=1&_mobile=0&locale=tr&customizationId=' + (ls.getItem('cusId') || 0),
                                     data: { userName: username, passWord: password }, dataType: 'json',
                                     success: function (j) {
                                         iwb.app.preloader.hide();
                                         if (j.success) {
-                                            if (!j.session) { // TODO. eger session gelmediyse,
-                                                // sikinti
+                                            if (!j.session) {
                                                 iwb.app.toast.show({ text: j.errorMsg || j.error || 'Error ', closeTimeout: 3000 });
                                                 return;
                                             }
@@ -303,32 +632,17 @@ display:none;
                                             iwb.home = false;
                                             _scd = j.session;
                                             setTimeout(function () {
-                                                // iwb.goHome();
                                                 iwb.prepareMainMenu();
                                             }, 100);
                                         } else {
                                             iwb.app.toast.show({ text: j.errorMsg || j.error || 'Error ', closeTimeout: 3000 });
                                         }
-                                    }, error: function () {
+                                    }, error: function (d) {
                                         iwb.app.preloader.hide();
+                                        iwb.app.toast.show({ text: 'Connection Error<br/>' + d, closeTimeout: 2000 });
                                     }
                                 });
                             }
-                        },
-                        scanBarcode: function () {
-                            cordova.plugins.barcodeScanner.scan(
-                                function (result) {
-                                    alert("We got a barcode\n" +
-                                        "Result: " + result.text + "\n" +
-                                        "Format: " + result.format + "\n" +
-                                        "Cancelled: " + result.cancelled);
-                                    /*_scd = false;
-                                    iwb.serverUrl = result.text;
-                                    iwb.checkSession({ callback: iwb.prepareMainMenu });*/
-                                },
-                                function (error) {
-                                    alert("Scanning failed: " + error);
-                                });
                         }
                     }
                 }
@@ -351,6 +665,16 @@ display:none;
         async: function (routeTo, routeFrom, resolve, reject) {
             iwb.request({
                 url: 'showMList', preloader: !0, data: Object.assign(routeTo.query, routeTo.params), success: function (d) {
+                    if (d.extended) {
+                        if (d.extended.methods) d.methods = Object.assign(d.methods || {}, d.extended.methods || {});
+                        if (d.extended.on) {
+                            if (!d.on) d.on = {};
+                            d._on = {};
+                            for (var k in d.extended.on) if (d.on[k]) d._on[k] = d.extended.on[k];
+                            else d.on[k] = d.extended.on[k];
+                        }
+                        delete d.extended;
+                    }
                     resolve({ component: d })
                 }
             });
@@ -362,6 +686,16 @@ display:none;
             iwb.request({
                 url: 'showMForm', preloader: !0, data: Object.assign(routeTo.query, routeTo.params), success: function (d) {
                     d.parentLoader = iwb.currentLoader;
+                    if (d.extended) {
+                        if (d.extended.methods) d.methods = Object.assign(d.methods || {}, d.extended.methods || {});
+                        if (d.extended.on) {
+                            if (!d.on) d.on = {};
+                            d._on = {};
+                            for (var k in d.extended.on) if (d.on[k]) d._on[k] = d.extended.on[k];
+                            else d.on[k] = d.extended.on[k];
+                        }
+                        delete d.extended;
+                    }
                     resolve({ component: d });
                 }
             });
@@ -386,10 +720,7 @@ display:none;
 
 
 
-var _scd = null;
-var iwb = {};
-
-iwb.serverUrl = 'http://icb.world/app/'; //'http://erp.ofisyem.com.tr/iwb/app/';
+iwb.serverUrl = ''http://192.168.2.122:8080/iwb/app/';  //'http://192.168.2.122:8080/iwb/app/'; 'http://icb.world/app/'
 iwb.debug = true;
 
 iwb.submit = function (idForm, baseParams, callback) {
@@ -409,7 +740,6 @@ iwb.submit = function (idForm, baseParams, callback) {
 }
 
 iwb.request = function (cfg) {
-    if (iwb.debug) console.log('iwb.request: ' + (cfg ? cfg.url : ''));
     if (!_scd) {
         iwb.checkSession(cfg);
     } else if (cfg) {
@@ -417,13 +747,12 @@ iwb.request = function (cfg) {
             if (cfg.preloader) iwb.app.preloader.show();
 
             return iwb.app.request({
-                url: iwb.serverUrl + cfg.url,
+                url: (cfg.serverUrl || iwb.serverUrl) + cfg.url,
                 method: cfg.method || 'GET', data: cfg.data || {},
                 // dataType: cfg.dataType || 'json',
                 success: function (d) {
                     if (cfg.preloader) iwb.app.preloader.hide();
                     var j = {};
-                    //console.log("d: ", d);
                     try {
                         j = eval('(' + d + ')');
                     } catch (e) {
@@ -461,7 +790,7 @@ iwb.request = function (cfg) {
                         default:
                             console.log('uknown error', j)
                             if (cfg.error) cfg.error(j, cfg);
-                            else iwb.app.toast.create({ position: 'top', closeButton: !0, text: j.error || 'Unknown Error' }).open();
+                            //else iwb.app.toast.create({ position: 'top', closeButton: !0, text: j.error || 'Unknown Error' }).open();
                             return;
                     }
                 },
@@ -522,7 +851,8 @@ function recMenu(r, lvl) {
         // style="font-size:
         // 13px;color:green;"
         s += '<li class="accordion-item iwb-menu iwb-menu-folder"><a href="#" class="item-link item-content" ><div class="item-inner">';
-        // if(r[qi].icon)s+='<div class="item-media"><i class="f7-icons">'+r[qi].icon+'</i></div>';
+        // if(r[qi].icon)s+='<div class="item-media"><i
+        // class="f7-icons">'+r[qi].icon+'</i></div>';
         s += '<div class="item-title">' + r[qi].text + '</div></div></a><div class="accordion-item-content iwb-menu-url">' +
             '<div class="list accordion-list"><ul>' + recMenu(r[qi].children, lvl + 1) + '</ul></div></div>';
     } else {
@@ -571,16 +901,17 @@ iwb.photoFail = function (message) {
     iwb.app.dialog.alert('Photo Upload Error: ' + message);
 }
 
-iwb.takePhoto = function (tid, tpk, jsonX, fromAlbum, profilePictureFlag) {
+iwb.takePhoto = function (tid, tpk, jsonX, fromAlbum, profilePictureFlag, file_type_id) {
     if (navigator.camera) {
         var options = Object.assign({ quality: 50, destinationType: Camera.DestinationType.FILE_URI }, jsonX.cameraOptions || {});
         if (fromAlbum) options.sourceType = Camera.PictureSourceType.SAVEDPHOTOALBUM;
         navigator.camera.getPicture(function (fileURI) {
+            console.log('fileURI: ', fileURI);
             var win = function (r) {
                 iwb.app.preloader.hide();
                 iwb.cameraClearCache();
                 if (jsonX.photoSuccess && jsonX.photoSuccess(r) === false) return;
-                iwb.app.toast.show({ buttonClose: !0, position: 'top', text: 'Photo Uploaded' });
+                iwb.app.toast.show({ closeTimeout:3000, text: 'Photo Uploaded' });
                 var pc = (jsonX.fileAttachCount || 0) + 1;
                 var bd = $$('#idx-photo-badge-' + jsonX.formId);
                 if (bd.length) {
@@ -599,7 +930,7 @@ iwb.takePhoto = function (tid, tpk, jsonX, fromAlbum, profilePictureFlag) {
             params.fileKey = "file";
             params.fileName = fileURI.substr(fileURI.lastIndexOf('/') + 1);
             params.mimeType = "image/jpeg";
-            params.params = { table_id: tid, table_pk: tpk, profilePictureFlag: profilePictureFlag || 0, file_type_id: -997 };
+            params.params = { table_id: tid, table_pk: tpk, profilePictureFlag: profilePictureFlag || 0, file_type_id: file_type_id || -997 };
             // if we need to send
             // parameters
             // to
@@ -615,12 +946,12 @@ iwb.takePhoto = function (tid, tpk, jsonX, fromAlbum, profilePictureFlag) {
 
 iwb.photoBrowser = function (tid, pk) {
     iwb.request({
-        url: 'ajaxQueryData?_qid=806', data: { _tableId: tid, _tablePk: pk }, success: function (j) {
+        url: 'ajaxQueryData?_qid=806', data: { _renderer: 'ext3_4', _tableId: tid, _tablePk: pk }, success: function (j) {
             if (j.data && j.data.length) {
                 var photos = [];
                 for (var qi = 0; qi < j.data.length; qi++) {
                     var s = j.data[qi].dsc.toLowerCase();
-                    if (s.endsWith('.png') || s.endsWith('.jpg') || s.endsWith('.jpeg')) photos.push(iwb.serverUrl+'sf/' + j.data[qi].dsc + '?_fai=' + j.data[qi].id + '&.r=' + Math.random());
+                    if (s.endsWith('.png') || s.endsWith('.jpg') || s.endsWith('.jpeg')) photos.push(iwb.serverUrl + 'sf/' + j.data[qi].dsc + '?_fai=' + j.data[qi].id + '&.r=' + Math.random());
                 }
                 if (photos.length) {
                     var p = iwb.app.photoBrowser.create({ photos: photos, theme: 'dark' });
@@ -631,19 +962,51 @@ iwb.photoBrowser = function (tid, pk) {
     });
 }
 
-iwb.autoCompleteJson = function (postUrl) {
-    return function (query, render) {
-        if (query.length === 0) {
-            render([]);
-            return;
-        }
-        iwb.request({
-            url: 'ajaxQueryData?_qid=' + postUrl, success: function (j) {
-                render(j.data);
+iwb.autoCompleteJson = function (queryId, opener) {
+    return {
+        openIn: 'popup',
+        valueProperty: 'id',
+        textProperty: 'dsc',
+        preloader: true,
+        closeOnSelect: true,
+        limit: 50,
+        openerEl: opener,
+        source: function (query, render) {
+            var autocomplete = this;
+            var results = [];
+            if (query.length === 0) {
+                render(results);
+                return;
             }
-        });
+            autocomplete.preloaderShow();
+            iwb.request({
+                url: 'ajaxQueryData?_qid=' + queryId,
+                data: {
+                    xdsc: query
+                },
+                success: function (j) {
+                    autocomplete.preloaderHide();
+                    render(j.data);
+                }, failure: function (j) {
+                    autocomplete.preloaderHide();
+                }
+            });
+        },
+        on: {
+            change: function (value) {
+                console.log(value);
+                var itemText = [],
+                    inputValue = [];
+                for (var i = 0; i < value.length; i++) {
+                    itemText.push(value[i].dsc);
+                    inputValue.push(value[i].id);
+                }
+                $$(opener).find('.item-after').text(itemText.join(', '));
+                $$(opener).find('input').val(inputValue.join(','));
+            }
+        }
     }
-}
+} 
 // Dom7
 var $$ = Dom7;
 
@@ -694,7 +1057,7 @@ iwb.showRecordMenu = function (json3, targetEl) {
             var p = iwb.app.popover.create({ content: '<div class="popover"><div class="popover-inner"><div class="list"><ul>' + lnk.join('') + '</ul></div></div></div>', targetEl: targetEl });
             p.open();
         } else {
-            if (href) iwb.app.router.navigate(href);
+            if (href) iwb.app.views.main.router.navigate(href);
         }
     }
 }
@@ -722,8 +1085,8 @@ iwb.graph = function (dg, gid) {
             if (!d || !d.length) return;
 
             switch (1 * dg.graphTip) {
-                case 6: //stacked area
-                case 5: //stacked column
+                case 6: // stacked area
+                case 5: // stacked column
                     var l = j.lookUp;
                     for (var k in l) lookUps.push(k);
                     if (!lookUps.length) return;
@@ -747,7 +1110,7 @@ iwb.graph = function (dg, gid) {
 
                         },
                         series: series,
-                        //	                title: {text: dg.name},
+                        // title: {text: dg.name},
                         xaxis: {
                             categories: labels,
                         },
@@ -758,27 +1121,27 @@ iwb.graph = function (dg, gid) {
                         }
                     }
                     break;
-                case 3://pie
+                case 3:// pie
                     d.map((z) => {
                         series.push(1 * z.xres);
                         labels.push(z.dsc || '-');
                     });
                     var options = {
-                        //	                title: {text: dg.name},
+                        // title: {text: dg.name},
                         chart: { id: 'apex-' + gid, type: 'donut', toolbar: { show: false } },
                         series: series, labels: labels, legend: dg.legend ? { position: 'bottom' } : false
                         , dataLabels: dg.legend ? {} : { formatter: function (val, opts) { return labels[opts.seriesIndex] + ' - ' + fmtDecimal(val); } }
                     }
 
                     break;
-                case 1://column
-                case 2://area
+                case 1:// column
+                case 2:// area
                     d.map((z) => {
                         series.push(1 * z.xres);
                         labels.push(z.dsc);
                     });
                     options = {
-                        //	                title: {text: dg.name},
+                        // title: {text: dg.name},
                         chart: {
                             id: 'apex-' + gid,
                             height: 40 * d.length + 20,
@@ -787,7 +1150,7 @@ iwb.graph = function (dg, gid) {
                         },
                         plotOptions: {
                             bar: {
-                                horizontal: 1 * dg.graphTip == 1 //d.length>5
+                                horizontal: 1 * dg.graphTip == 1 // d.length>5
                             }
                         },
                         dataLabels: 1 * dg.graphTip == 1 ? {
@@ -834,11 +1197,11 @@ iwb.fmtDateAgo = function (dt) {
     var tnow = new Date().getTime();
     var dt2 = dt.toDate("dd/mm/yyyy hh:ii:ss");
     var t = dt2.getTime();
-    if (t + 30 * 1000 > tnow) return 'Az Önce';// 5 sn
-    if (t + 2 * 60 * 1000 > tnow) return 'Bir Dakika Önce';// 1 dka
-    if (t + 60 * 60 * 1000 > tnow) return Math.round((tnow - t) / (60 * 1000)) + ' Dakika Önce';
-    if (t + 24 * 60 * 60 * 1000 > tnow) return Math.round((tnow - t) / (60 * 60 * 1000)) + ' Saat Önce';
-    if (t + 2 * 24 * 60 * 60 * 1000 > tnow) return 'Dün';
+    if (t + 30 * 1000 > tnow) return 'Seconds ago';//'Az Önce';// 5 sn
+    if (t + 2 * 60 * 1000 > tnow) return ' A minute ago';//'Bir Dakika Önce';// 1 dka
+    if (t + 60 * 60 * 1000 > tnow) return Math.round((tnow - t) / (60 * 1000)) + 'Minutes ago';//' Dakika Önce';
+    if (t + 24 * 60 * 60 * 1000 > tnow) return Math.round((tnow - t) / (60 * 60 * 1000)) + ' Hours ago';//' Saat Önce';
+    if (t + 2 * 24 * 60 * 60 * 1000 > tnow) return 'Yesterday';//'Dün';
     if (t + 7 * 24 * 60 * 60 * 1000 > tnow) return daysOfTheWeek[dt2.getDay()];// 5dka
     return dt.substr(0, 10);
 }
@@ -852,7 +1215,7 @@ iwb.fmtDateAgo2 = function (dt) {
     return dt.substr(0, 10);
 }
 
-function fmtDecimal(value, digit) {
+function fmtDecimalNew(value, digit) {
     if (!value) return '0';
     if (!digit) digit = 2;
     var result = Math.round(value * Math.pow(10, digit)) / Math.pow(10, digit) + '';
@@ -891,21 +1254,25 @@ iwb.loadCombo = function (cmb, params) {
     var selected = ctrl && ctrl.length ? ctrl.data('value') : '';
 
     ctrl.find('option').remove();// temizle once
-    iwb.app.smartSelect.destroy(cmb);
     iwb.request({
         url: 'ajaxQueryData', data: params, success: function (j) {
-            var data = j.data, res = [], s = '';
+            var data = j.data, res = [], s = '<option></option>';
 
             for (var qi = 0; qi < data.length; qi++) {
                 s += '<option value="' + data[qi].id + '"' + (data[qi].id == selected ? ' selected' : '') + '>' + data[qi].dsc + '</option>';
-                if (data[qi].id == selected) res.push(data[qi].dsc);
+                if (data[qi].id == selected) {
+                    var obj = {};
+                    obj.dsc = data[qi].dsc;
+                    obj.id = data[qi].id;
+                    res.push(obj);
+                }
             }
             ctrl.append(s);
-            // console.log('as',selected, s);
-            iwb.app.smartSelect.create(cmb);
-            // $$(cmb.replace('idx-','id-')).find('.item-after').text(res.join(',
-            // '));
-            // $$(cmb.replace('idx-','id-')).show();
+            var smSelect = iwb.app.smartSelect.get(cmb.replace('idx', 'sid'));
+            //console.log('get value: ', smSelect.getValue());
+            if (res.length > 0) {
+                smSelect.setValue(1 * res[0].id);
+            }
         }
     });
 }
@@ -949,9 +1316,10 @@ String.prototype.toDate = function (format) {
 };
 
 iwb.prepareMainMenu = function () {
+    var menuQueryId = _scd && _scd.mobileMenuQueryId ? _scd.mobileMenuQueryId : 1487;
     iwb.request({
-        url: 'ajaxQueryData?_qid=1487&.r=' + Math.random(), dataType: 'text', data: { _json: 1, xuser_tip: typeof xuserTip != 'undefined' && xuserTip ? xuserTip : 0 }, success: function (d) {
-            if (!d.data || !d.data.length) {//no menu
+        url: 'ajaxQueryData?_qid=' + menuQueryId + '&.r=' + Math.random(), dataType: 'text', data: { _renderer: 'ext3_4', _json: 1/*, xuser_tip: typeof xuserTip != 'undefined' && xuserTip ? xuserTip : 0*/ }, success: function (d) {
+            if (!d.data || !d.data.length) {// no menu
                 iwb.openLoginScreen();
                 iwb.app.toast.create({ position: 'top', closeTimeout: 3000, text: 'No menu defined for this app' }).open();
                 return;
@@ -963,7 +1331,7 @@ iwb.prepareMainMenu = function () {
 }
 iwb.home = false;
 iwb.goHome = function () {
-    iwb.app.views.main.router.navigate('/home');
+    iwb.app.views.main.router.navigate(_scd && _scd.homePageId ? (1*_scd.homePageId > 0 ? '/showMPage?_tid=' + _scd.homePageId : ('/showMList?_lid=' + (-1*_scd.homePageId))):'/home');
     iwb.home = !0;
 }
 
@@ -979,7 +1347,7 @@ iwb.reLogin = function (afterCfg) {
         if (reUserName && rePassWord) {
             iwb.app.preloader.show();
             Framework7.request({
-                url: iwb.serverUrl + 'ajaxAuthenticateUser?d=1&c=1&_mobile=0&_mobile_device_id=' + iwb.deviceId + '&customizationId=0&locale=tr',
+                url: iwb.serverUrl + 'ajaxAuthenticateUser?d=1&c=1&_mobile=0&_mobile_device_id=' + iwb.deviceId + '&customizationId=' + (ls.getItem('cusId') || 0) + '&locale=tr',
                 data: { userName: reUserName, passWord: rePassWord }, dataType: 'json',
                 success: function (j) {
                     iwb.app.preloader.hide();
@@ -989,18 +1357,15 @@ iwb.reLogin = function (afterCfg) {
                             iwb.openLoginScreen();
                             return;
                         }
-                        if (!_scd || _scd.userId != j.session.userId) {// TODO
-                            // burda
-                            // butun
-                            // ekranlar
-                            // gemizlenecek
+                        if (!_scd || _scd.userId != j.session.userId) {
                             iwb.app.views.main.router.clearPreviousHistory();
                             iwb.home = false;
                             _scd = j.session;
-                            iwb.goHome();
+                            iwb.prepareMainMenu();
                         } else {
                             _scd = j.session;
                             if (afterCfg) iwb.request(afterCfg);// tekrar cagir
+                            else iwb.prepareMainMenu();
                         }
                     } else {
                         _scd = null;
@@ -1025,22 +1390,34 @@ iwb.reLogin = function (afterCfg) {
     iwb.openLoginScreen();
 }
 
+
 iwb.checkSession = function (afterCfg) {
     Framework7.request({
         url: iwb.serverUrl + 'ajaxPing?d=1&c=1&.r=' + Math.random(),
         method: 'POST', data: {},
         // dataType: 'json',
         success: function (d) {
+            var scdExists = !!_scd;
             _scd = null;
             var j = eval('(' + d + ')');
+            if (!j.version || j.version != 'v2') {
+                alert("Wrong Version. Needs V2 on Server");
+                iwb.app.views.main.router.navigate("/workspace");
+                return;
+            }
             if (j.success && j.session) {
                 _scd = j.session;
-                if (afterCfg) iwb.request(afterCfg);
-            } else
-                iwb.reLogin(afterCfg);
+                if (afterCfg) {
+                    iwb.request(afterCfg);
+                } else
+                    iwb.prepareMainMenu();
+            } else {
+                if (scdExists) iwb.reLogin(afterCfg || null);
+                else iwb.app.views.main.router.navigate("/workspace");
+            }           
         }, error: function (d) {
             iwb.app.toast.show({
-                text: 'Error Connecting ' + d, closeButton: true, closeButtonText: 'Try Again'
+                text: 'Error Connecting ' + d.requestUrl, closeButton: true, closeButtonText: 'Try Again'
                 , on: {
                     close: function () {
                         iwb.checkSession(afterCfg);
@@ -1050,12 +1427,13 @@ iwb.checkSession = function (afterCfg) {
         }
     });
 }
+
 // Framework7 App main instance
 iwb.app = new Framework7({
     root: '#app', // App root element
     id: 'io.framework7.iwb', // App bundle ID
-    name: 'iCodeBetter F7', // App name
-    theme: 'auto',// 'auto', // Automatic theme detection
+    name: 'iWorkBetter F7', // App name
+    theme: iwb.theme || 'auto',// 'auto', // Automatic theme detection
     // App root data
     data: function () {
         return {
@@ -1063,10 +1441,11 @@ iwb.app = new Framework7({
     },
     dialog: {
         // set default title for all dialog shortcuts
-        title: 'iCodeBetter',
+        title: 'iWorkBetter',
     },
     // App routes
     routes: routes,
+    init:true,
     methods: {
         test: function () {
             alert('test')
@@ -1076,22 +1455,121 @@ iwb.app = new Framework7({
         init: function () {
             var f7 = this;
 
-            if (f7.device.cordova) {
-                // Init cordova APIs (see cordova-app.js)
-                cordovaApp.init(f7);
-            }
             $$('#idx-reload').on('click', function () {
                 var fd = iwb.app.form.convertToData('#idx-reload-form');
                 iwb.currentLoader(0, null, fd);
             });
 
-        }
+
+            if (f7.device.cordova) {
+                // Init cordova APIs (see cordova-app.js)
+                cordovaApp.init(f7);
+                console.log('girdi');
+                document.addEventListener("pause", iwb.onPause, false);
+                document.addEventListener("resume", iwb.onResume, false);
+                document.addEventListener("menubutton", iwb.onMenuKeyDown, false);
+                document.addEventListener("backbutton", iwb.onBack, false);
+                document.addEventListener("searchbutton", iwb.onSearchKeyDown, false);
+            }
+        },
     }
 });
 // Init/Create main view
 var mainView = iwb.app.views.create('.view-main');
+var searchFormView = iwb.app.views.create('.panel-right .view');
+
+
+iwb.autoCompleteJson4AutocompleteMulti = function (queryId, initVal, opener, children) { //[{cmb:, fnc:}]
+    if (initVal) {
+        for (var i = 0; i < children.length; i++) {
+            var params = children[i].fnc(initVal);
+            if (params) {
+                iwb.loadCombo(children[i].cmb, params);
+            }
+        }
+    }
+
+    return {
+        openIn: 'popup',
+        limit: 50,
+        valueProperty: 'id',
+        textProperty: 'dsc',
+        preloader: true,
+        closeOnSelect: true,
+        openerEl: opener,
+        //multiple:true,
+        source: function (query, render) {
+            var autocomplete = this;
+            var results = [];
+            if (query.length === 0) {
+                render(results);
+                return;
+            }
+            autocomplete.preloaderShow();
+            iwb.request({
+                url: 'ajaxQueryData?_qid=' + queryId,
+                data: {
+                    xdsc: query
+                },
+                success: function (j) {
+                    autocomplete.preloaderHide();
+                    render(j.data);
+                }, failure: function (j) {
+                    autocomplete.preloaderHide();
+                }
+            });
+        },
+        on: {
+            change: function (value) {
+                console.log(value);
+                var itemText = [],
+                    inputValue = [];
+                for (var i = 0; i < value.length; i++) {
+                    itemText.push(value[i].dsc);
+                    inputValue.push(value[i].id);
+                }
+                $$(opener).find('.item-after').text(itemText.join(', '));
+                var val = inputValue.join(',');
+                $$(opener).find('input').val(val);
+                for (var i = 0; i < children.length; i++) {
+                    var xparams = children[i].fnc(val);
+                    if (xparams) iwb.loadCombo(children[i].cmb, xparams);
+                    else {
+                        $$(children[i].cmb).find('option').remove();
+                        //if (true || params === false) $$(children[i].cmb).hide();
+                    }
+                }
+
+            }
+        }
+    }
+}
+
 
 iwb.checkWorkspace = function () {
 
 }
-iwb.prepareMainMenu();
+
+
+iwb.onPause = function (aq) {//asagi atilinca
+
+}
+
+iwb.onResume = function (aq) {//uyaninca
+    setTimeout(function () {
+        iwb.checkSession();
+    }, 10);
+}
+
+iwb.onMenuKeyDown = function (aq, bq, cq) {//burda: bulamadim nerde?
+}
+
+iwb.onBack = function (aq) {//android
+    iwb.app.views.main.router.back({ force: !0 });
+}
+
+iwb.onSearchKeyDown = function (aq) {
+    //alert('onSearchKeyDown');
+}
+iwb.checkSession();
+
