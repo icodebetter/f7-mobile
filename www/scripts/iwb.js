@@ -400,7 +400,7 @@ var routes = [
                                     if (iwb.iwb) ls.setItem('cusId', f.cusId || '0');
                                     iwb.app.card.close('#idx-card-project-' + id);
                                     document.body.className = f.theme || '';
-                                    if (_scd) {
+                                    if (_scd && 1*_scd.customizationId == 1*f.cusId) {
                                         iwb.home = false;
                                         iwb.prepareMainMenu();
                                     } else
@@ -720,8 +720,8 @@ iWorkbetter offers many solutions as diverse as pre-sale solutions, invoicing et
 
 
 
-iwb.serverUrl = 'http://icb.world/app/';  //'http://192.168.2.122:8080/iwb/app/'; 
-iwb.debug = true;
+iwb.serverUrl = 'http://promiscrm.com/bmp/app/'; 
+iwb.debug = false;
 
 iwb.submit = function (idForm, baseParams, callback) {
     iwb.request({
@@ -1071,22 +1071,23 @@ iwb.graph = function (dg, gid) {
 
     iwb.request({
         url:
-            (dg.query ? "ajaxQueryData4Stat?_gid=" : "ajaxQueryData4StatTree?_gid=") +
-            dg.gridId +
-            "&_stat=" +
-            dg.funcTip +
-            "&_qfid=" +
-            dg.groupBy +
-            "&_dtt=" +
-            dg.dtTip,
+        (dg.query ? "ajaxQueryData4Stat?_max=100&_gid=" : "ajaxQueryData4StatTree?_gid=") +
+        dg.gridId +
+        "&_stat=" +
+        dg.funcTip +
+        "&_qfid=" +
+        dg.groupBy +
+        "&_dtt=" +
+        dg.dtTip,
         data: Object.assign(params, dg.queryParams),
         success: function (j) {
+            //debugger
             var d = j.data;
             if (!d || !d.length) return;
 
             switch (1 * dg.graphTip) {
-                case 6: // stacked area
-                case 5: // stacked column
+                case 6: //stacked area
+                case 5: //stacked column
                     var l = j.lookUp;
                     for (var k in l) lookUps.push(k);
                     if (!lookUps.length) return;
@@ -1110,7 +1111,7 @@ iwb.graph = function (dg, gid) {
 
                         },
                         series: series,
-                        // title: {text: dg.name},
+                        //	                title: {text: dg.name},
                         xaxis: {
                             categories: labels,
                         },
@@ -1121,36 +1122,51 @@ iwb.graph = function (dg, gid) {
                         }
                     }
                     break;
-                case 3:// pie
+                case 3://pie
                     d.map((z) => {
                         series.push(1 * z.xres);
                         labels.push(z.dsc || '-');
                     });
                     var options = {
-                        // title: {text: dg.name},
+                        //	                title: {text: dg.name},
                         chart: { id: 'apex-' + gid, type: 'donut', toolbar: { show: false } },
                         series: series, labels: labels, legend: dg.legend ? { position: 'bottom' } : false
                         , dataLabels: dg.legend ? {} : { formatter: function (val, opts) { return labels[opts.seriesIndex] + ' - ' + fmtDecimal(val); } }
                     }
 
                     break;
-                case 1:// column
-                case 2:// area
+                case 1://column
+                case 2://area
+                    var l = j.lookUp;
+                    if (l) for (var k in l) lookUps.push(k);
+                    series = [{ name: l['xres'] || 'Count', data: [] }];
+                    var resCount = 1;
                     d.map((z) => {
-                        series.push(1 * z.xres);
-                        labels.push(z.dsc);
+                        if (z.xres2 && resCount < 2) resCount = 2;
+                        if (z.xres3 && resCount < 3) resCount = 3;
+                        if (z.xres4 && resCount < 4) resCount = 4;
+                        if (z.xres5 && resCount < 5) resCount = 5;
+                    });
+                    if (resCount > 1) for (var qi = 1; qi < resCount; qi++)series.push({ name: l['xres' + (qi + 1)] || ('Serie' + (qi + 1)), data: [] });
+                    //	        	lookUps.map((y)=>labels.push(l[y]||'-'));
+
+                    d.map((z) => {
+                        series[0].data.push(z.xres ? 1 * z.xres : 0);
+                        if (resCount > 1) for (var qi = 1; qi < resCount; qi++)series[qi].data.push(z['xres' + (qi + 1)] ? 1 * z['xres' + (qi + 1)] : 0);
+
+                        labels.push(z.dsc || z.id);
                     });
                     options = {
-                        // title: {text: dg.name},
+                        //	                title: {text: dg.name},
                         chart: {
                             id: 'apex-' + gid,
-                            height: 40 * d.length + 20,
+                            height: 1 * dg.graphTip == 1 ? (40 * d.length + 20) : 400,
                             type: 1 * dg.graphTip == 1 ? 'bar' : 'area',
                             toolbar: { show: false }
                         },
                         plotOptions: {
                             bar: {
-                                horizontal: 1 * dg.graphTip == 1 // d.length>5
+                                horizontal: 1 * dg.graphTip == 1 //d.length>5
                             }
                         },
                         dataLabels: 1 * dg.graphTip == 1 ? {
@@ -1167,9 +1183,7 @@ iwb.graph = function (dg, gid) {
                                 enabled: true
                             }
                         } : {},
-                        series: [{
-                            data: series
-                        }],
+                        series: series,
                         xaxis: {
                             categories: labels,
                         },
